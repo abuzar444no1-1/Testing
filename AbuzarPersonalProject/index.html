@@ -1,0 +1,118 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AETHERIA | Spectral Apex Experience</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Plus Jakarta Sans', 'sans-serif'],
+            mono: ['JetBrains Mono', 'monospace'],
+          },
+          colors: {
+            primary: '#6366f1',
+            secondary: '#a855f7',
+            accent: '#f472b6',
+            dark: '#020617',
+            surface: '#0f172a',
+          },
+          animation: {
+            'scan': 'scan 4s linear infinite',
+            'float-slow': 'float 10s ease-in-out infinite',
+          },
+          keyframes: {
+            scan: {
+              '0%': { top: '-10%' },
+              '100%': { top: '110%' }
+            },
+            float: {
+              '0%, 100%': { transform: 'translateY(0) rotate(0deg)' },
+              '50%': { transform: 'translateY(-40px) rotate(5deg)' }
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    * { cursor: none !important; }
+    html { scroll-behavior: smooth; background: #020617; }
+    body { margin: 0; padding: 0; overflow-x: hidden; -webkit-font-smoothing: antialiased; }
+    
+    ::selection { background: #6366f1; color: white; }
+    
+    /* Spectral Text Effect */
+    .spectral-text {
+      position: relative;
+      color: white;
+    }
+    
+    /* SVG Filter Definitions */
+    .gooey-container {
+      filter: url('#gooey');
+    }
+
+    /* Portal Transition */
+    .portal-mask {
+      clip-path: circle(0% at var(--mouse-x, 50%) var(--mouse-y, 50%));
+      transition: clip-path 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .group:hover .portal-mask {
+      clip-path: circle(150% at var(--mouse-x, 50%) var(--mouse-y, 50%));
+    }
+
+    .noise-texture {
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+      opacity: 0.05;
+      pointer-events: none;
+      z-index: 100;
+    }
+  </style>
+  <script type="importmap">
+  {
+    "imports": {
+      "react": "https://esm.sh/react@^19.2.3",
+      "react-dom/": "https://esm.sh/react-dom@^19.2.3/",
+      "react/": "https://esm.sh/react@^19.2.3/",
+      "framer-motion": "https://esm.sh/framer-motion@^12.23.26",
+      "lucide-react": "https://esm.sh/lucide-react@^0.562.0"
+    }
+  }
+  </script>
+<link rel="stylesheet" href="/index.css">
+</head>
+<body>
+  <!-- SVG Filters for Gooey and Chromatic Aberration -->
+  <svg style="position: absolute; width: 0; height: 0;" aria-hidden="true">
+    <defs>
+      <filter id="gooey">
+        <feGaussianBlur in="SourceGraphic" stdDeviation="10" result="blur" />
+        <feColorMatrix in="blur" mode="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 18 -7" result="goo" />
+        <feComposite in="SourceGraphic" in2="goo" operator="atop" />
+      </filter>
+      <filter id="chromatic">
+        <feColorMatrix in="SourceGraphic" type="matrix" values="1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0" result="red"/>
+        <feOffset in="red" dx="2" dy="0" result="redOffset"/>
+        <feColorMatrix in="SourceGraphic" type="matrix" values="0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 1 0" result="green"/>
+        <feOffset in="green" dx="-2" dy="0" result="greenOffset"/>
+        <feColorMatrix in="SourceGraphic" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 1 0" result="blue"/>
+        <feBlend in="redOffset" in2="greenOffset" mode="screen" result="rg"/>
+        <feBlend in="rg" in2="blue" mode="screen"/>
+      </filter>
+    </defs>
+  </svg>
+  <div class="noise-texture"></div>
+  <div id="root"></div>
+<script type="module" src="/index.tsx"></script>
+</body>
+</html>
